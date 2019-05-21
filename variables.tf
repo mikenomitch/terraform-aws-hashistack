@@ -23,3 +23,18 @@ variable "min_servers" {
   type = number
   default = 1
 }
+
+variable "key_name" {
+  type = string
+  default = "nomad"
+}
+
+variable "to_touch" {
+  type = string
+  default = "foo"
+}
+
+variable "to_echo" {
+  type = string
+  default = "bar"
+}
