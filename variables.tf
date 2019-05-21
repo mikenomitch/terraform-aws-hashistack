@@ -13,3 +13,13 @@ variable "region" {
   type = string
   default = "us-east-1"
 }
+
+variable "max_servers" {
+  type = number
+  default = 2
+}
+
+variable "min_servers" {
+  type = number
+  default = 1
+}
