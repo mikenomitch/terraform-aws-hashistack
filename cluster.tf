@@ -15,8 +15,6 @@ resource "aws_launch_configuration" "hashistack_launch" {
       min_servers = "${var.min_servers}"
       nomad_version = "${var.nomad_version}",
       region = "${var.region}"
-      to_echo = "${var.to_echo}",
-      to_touch = "${var.to_touch}",
     }
   )
 }

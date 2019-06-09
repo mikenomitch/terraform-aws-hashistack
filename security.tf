@@ -6,10 +6,10 @@
 
 resource "aws_security_group_rule" "allow_http_inbound" {
   type        = "ingress"
-  from_port   = "${var.http_port}"
-  to_port     = "${var.http_port}"
+  from_port   = "${var.http_port_from}"
+  to_port     = "${var.http_port_to}"
   protocol    = "tcp"
-  cidr_blocks = ["${var.allowed_inbound_cidr_blocks}"]
+  cidr_blocks = ["${var.whitelist_ip}"]
 
   security_group_id = "${aws_security_group.lc_security_group.id}"
 }
@@ -21,7 +21,7 @@ resource "aws_security_group_rule" "allow_rpc_inbound" {
   from_port   = "${var.rpc_port}"
   to_port     = "${var.rpc_port}"
   protocol    = "tcp"
-  cidr_blocks = ["${var.allowed_inbound_cidr_blocks}"]
+  cidr_blocks = ["${var.whitelist_ip}"]
 
   security_group_id = "${aws_security_group.lc_security_group.id}"
 }
@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "allow_serf_tcp_inbound" {
   from_port   = "${var.serf_port}"
   to_port     = "${var.serf_port}"
   protocol    = "tcp"
-  cidr_blocks = ["${var.allowed_inbound_cidr_blocks}"]
+  cidr_blocks = ["${var.whitelist_ip}"]
 
   security_group_id = "${aws_security_group.lc_security_group.id}"
 }
@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "allow_serf_udp_inbound" {
   from_port   = "${var.serf_port}"
   to_port     = "${var.serf_port}"
   protocol    = "udp"
-  cidr_blocks = ["${var.allowed_inbound_cidr_blocks}"]
+  cidr_blocks = ["${var.whitelist_ip}"]
 
   security_group_id = "${aws_security_group.lc_security_group.id}"
 }
@@ -57,7 +57,7 @@ resource "aws_security_group_rule" "allow_ssh_inbound" {
   from_port   = "${var.ssh_port}"
   to_port     = "${var.ssh_port}"
   protocol    = "tcp"
-  cidr_blocks = ["${var.allowed_ssh_cidr_blocks}"]
+  cidr_blocks = ["${var.whitelist_ip}"]
 
   security_group_id = "${aws_security_group.lc_security_group.id}"
 }

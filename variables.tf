@@ -28,32 +28,32 @@ variable "vpc_id" {
 
 variable "serf_port" {
   type = string
-  default = "4646"
+  default = "4648"
 }
 
 variable "ssh_port" {
   type = string
-  default = "4646"
+  default = "22"
 }
 
 variable "rpc_port" {
   type = string
-  default = "4003"
+  default = "4647"
 }
 
-variable "http_port" {
+variable "http_port_from" {
   type = string
   default = "4000"
 }
 
-// CIDR
-
-variable "allowed_inbound_cidr_blocks" {
+variable "http_port_to" {
   type = string
-  default = "0.0.0.0/0"
+  default = "9999"
 }
 
-variable "allowed_ssh_cidr_blocks" {
+// CIDR
+
+variable "whitelist_ip" {
   type = string
   default = "0.0.0.0/0"
 }
