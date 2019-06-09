@@ -107,11 +107,8 @@ server {
 
 client {
   enabled = true
-}
-
-plugin "raw_exec" {
-  config {
-    enabled = true
+  options = {
+    "driver.raw_exec.enable" = "1"
   }
 }
 
