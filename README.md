@@ -12,12 +12,10 @@ containerized applications to a personal Nomad cluster.
 
 ### TODOs
 
-- Get Fabio and Docker container running as example tasks
-- Add separate server and client nodes
-  - With option for cheap dev version?
 - Get Consul template running
-- Nice outputs on terraform apply for quick
-  access
+- Add separate server and client nodes
+- Get Docker container running as example task
+- Nice outputs on terraform apply for quick access
 - Write out How to Use Docs
   - Variables necessary
   - Commands for ssh-ing
