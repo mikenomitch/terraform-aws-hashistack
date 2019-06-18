@@ -22,7 +22,6 @@ containerized applications to a personal Nomad cluster.
   - Commands for accessing
   - Commands for running nomad
   - Use TF output if possible
-- Split up startup script into various templates
 - Add Vault
 - Configuration Audit (every option on each service)
 
@@ -33,3 +32,4 @@ This was written with terraform 12.
 ### Inspirations
 
 https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
+https://github.com/hashicorp/nomad/tree/master/terraform

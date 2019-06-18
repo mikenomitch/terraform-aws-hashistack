@@ -108,3 +108,13 @@ variable "to_echo" {
   type = string
   default = "bar"
 }
+
+variable "retry_join" {
+  type = "map"
+
+  default = {
+    provider  = "aws"
+    tag_key   = "ConsulAutoJoin"
+    tag_value = "auto-join"
+  }
+}
