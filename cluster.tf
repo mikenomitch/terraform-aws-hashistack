@@ -42,7 +42,7 @@ resource "aws_launch_configuration" "hashistack_launch" {
 
 resource "aws_autoscaling_group" "hashistack_asg" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 1
+  desired_capacity   = 2
   max_size           = var.max_servers
   min_size           = var.min_servers
 

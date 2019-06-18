@@ -2,7 +2,7 @@
 
 variable "nomad_version" {
   type = string
-  default = "0.9.1"
+  default = "0.9.3"
 }
 
 variable "consul_version" {
@@ -84,7 +84,7 @@ variable "max_servers" {
 
 variable "min_servers" {
   type = number
-  default = 1
+  default = 2
 }
 
 variable "cluster_name" {
