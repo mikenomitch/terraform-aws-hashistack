@@ -30,5 +30,5 @@ This was written with terraform 12.
 
 ### Inspirations
 
-https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
-https://github.com/hashicorp/nomad/tree/master/terraform
+- https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
+- https://github.com/hashicorp/nomad/tree/master/terraform
