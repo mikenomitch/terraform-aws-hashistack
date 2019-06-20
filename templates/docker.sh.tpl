@@ -1,4 +1,4 @@
-echo "=== Getting Docker TEST ==="
+echo "=== Getting Docker ==="
 
 sleep 30
 sudo apt-get -yqq update

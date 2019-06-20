@@ -9,12 +9,13 @@ unzip nomad.zip >/dev/null
 sudo chmod +x nomad
 sudo mv nomad /usr/local/bin/nomad
 
-echo "=== Setting up Nomad ==="
-
 sudo mkdir -p /mnt/nomad
 sudo mkdir -p /etc/nomad.d
 
-sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
+if [ $${is_server} ]; then
+  echo "=== Setting up Nomad as Server ==="
+
+  sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
 datacenter = "${datacenter}"
 region     = "${region}"
 data_dir   = "/mnt/nomad"
@@ -26,6 +27,24 @@ server {
   bootstrap_expect = ${min_servers}
 }
 
+server_join {
+  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
+}
+
+consul {
+  address = "$PRIVATE_IP:8500"
+}
+EOF
+else
+  echo "=== Setting up Nomad as Client ==="
+
+  sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
+datacenter = "${datacenter}"
+region     = "${region}"
+data_dir   = "/mnt/nomad"
+
+bind_addr = "0.0.0.0"
+
 client {
   enabled = true
   options = {
@@ -33,10 +52,15 @@ client {
   }
 }
 
+server_join {
+  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
+}
+
 consul {
-  address = "127.0.0.1:8500"
+  address = "$PRIVATE_IP:8500"
 }
 EOF
+fi
 
 sudo tee /etc/systemd/system/nomad.service > /dev/null <<"EOF"
 [Unit]

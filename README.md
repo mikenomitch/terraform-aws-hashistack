@@ -12,7 +12,6 @@ containerized applications to a personal Nomad cluster.
 
 ### TODOs
 
-- Get Consul template running
 - Add separate server and client nodes
 - Get Docker container running as example task
 - Nice outputs on terraform apply for quick access

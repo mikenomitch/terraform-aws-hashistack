@@ -10,12 +10,14 @@ unzip consul.zip >/dev/null
 sudo chmod +x consul
 sudo mv consul /usr/local/bin/consul
 
-
 echo "=== Setting up Consul ==="
 sudo mkdir -p /mnt/consul
 sudo mkdir -p /etc/consul.d
 
-sudo tee /etc/consul.d/config.json > /dev/null <<EOF
+if [ $${is_server} ]; then
+  echo "=== Setting up Consul as Server ==="
+
+  sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
   "datacenter": "${datacenter}",
   "log_level": "INFO",
@@ -24,7 +26,7 @@ sudo tee /etc/consul.d/config.json > /dev/null <<EOF
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
-  "advertise_addr": "$PRIVATE_IP",
+  "advertise_addr": "$PRIVATE_IP:8500",
   "bootstrap_expect": ${min_servers},
   "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
   "service": {
@@ -32,6 +34,22 @@ sudo tee /etc/consul.d/config.json > /dev/null <<EOF
   }
 }
 EOF
+else
+  echo "=== Setting up Consul as Client ==="
+
+  sudo tee /etc/consul.d/config.json > /dev/null <<EOF
+{
+  "datacenter": "${datacenter}",
+  "log_level": "INFO",
+  "ui": true,
+  "data_dir": "/mnt/consul",
+  "bind_addr": "0.0.0.0",
+  "client_addr": "0.0.0.0",
+  "advertise_addr": "$PRIVATE_IP:8500",
+  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
+}
+EOF
+fi
 
 sudo tee /etc/systemd/system/consul.service > /dev/null <<"EOF"
 [Unit]
