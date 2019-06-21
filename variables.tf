@@ -79,12 +79,12 @@ variable "instance_type" {
 
 variable "max_servers" {
   type = number
-  default = 2
+  default = 3
 }
 
 variable "min_servers" {
   type = number
-  default = 2
+  default = 3
 }
 
 variable "cluster_name" {
