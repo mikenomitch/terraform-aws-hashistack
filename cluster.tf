@@ -19,19 +19,32 @@ locals {
     retry_tag_value = var.retry_join.tag_value
   }
 
-  consul_server_config = templatefile("${path.module}/templates/consul.sh.tpl", merge(local.consul_base_config, {is_server = true}))
-  consul_client_config = templatefile("${path.module}/templates/consul.sh.tpl", merge(local.consul_base_config, {is_server = false}))
+  consul_server_config = templatefile(
+    "${path.module}/templates/consul.sh.tpl",
+    merge(local.consul_base_config, {is_server = true})
+  )
 
-  nomad_server_config = templatefile("${path.module}/templates/nomad.sh.tpl", merge(local.nomad_base_config, {is_server = true}))
-  nomad_client_config = templatefile("${path.module}/templates/nomad.sh.tpl", merge(local.nomad_base_config, {is_server = false}))
+  consul_client_config = templatefile(
+    "${path.module}/templates/consul.sh.tpl",
+    merge(local.consul_base_config, {is_server = false})
+  )
+
+  nomad_server_config = templatefile(
+    "${path.module}/templates/nomad.sh.tpl",
+    merge(local.nomad_base_config, {is_server = true})
+  )
+
+  nomad_client_config = templatefile(
+    "${path.module}/templates/nomad.sh.tpl",
+    merge(local.nomad_base_config, {is_server = false})
+  )
+
   docker_config = templatefile("${path.module}/templates/docker.sh.tpl", {})
   consul_template_config = templatefile("${path.module}/templates/consul_template.sh.tpl", {})
 
   launch_base_user_data = {
-    consul_config          = local.consul_client_config
     consul_template_config = local.consul_template_config
     docker_config          = local.docker_config
-    nomad_config           = local.nomad_client_config
   }
 }
 
@@ -46,7 +59,10 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
 
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
-    merge(local.launch_base_user_data, {is_server = true})
+    merge(local.launch_base_user_data, {
+      consul_config = local.consul_server_config
+      nomad_config  = local.nomad_server_config
+    })
   )
 }
 
@@ -61,13 +77,16 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
 
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
-    merge(local.launch_base_user_data, {is_server = false})
+    merge(local.launch_base_user_data, {
+      consul_config = local.consul_client_config
+      nomad_config  = local.nomad_client_config
+    })
   )
 }
 
 resource "aws_autoscaling_group" "hashistack_server_asg" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 2
+  desired_capacity   = 3
   max_size           = var.max_servers
   min_size           = var.min_servers
 
@@ -89,7 +108,7 @@ resource "aws_autoscaling_group" "hashistack_server_asg" {
 
 resource "aws_autoscaling_group" "hashistack_client_asg" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 2
+  desired_capacity   = 3
   max_size           = var.max_servers
   min_size           = var.min_servers
 

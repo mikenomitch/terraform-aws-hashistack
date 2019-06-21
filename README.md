@@ -26,7 +26,7 @@ containerized applications to a personal Nomad cluster.
 
 ### Deps
 
-This was written with terraform 12.
+Requires terraform 12.
 
 ### Inspirations
 

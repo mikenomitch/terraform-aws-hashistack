@@ -12,7 +12,7 @@ sudo mv nomad /usr/local/bin/nomad
 sudo mkdir -p /mnt/nomad
 sudo mkdir -p /etc/nomad.d
 
-if [ $${is_server} ]; then
+if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   echo "=== Setting up Nomad as Server ==="
 
   sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
@@ -28,11 +28,18 @@ server {
 }
 
 server_join {
-  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
+  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
 }
 
 consul {
   address = "$PRIVATE_IP:8500"
+  auto_advertise = true
+
+  server_service_name = "nomad"
+  server_auto_join    = true
+
+  client_service_name = "nomad-client"
+  client_auto_join    = true
 }
 EOF
 else
@@ -53,7 +60,7 @@ client {
 }
 
 server_join {
-  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} region=${region}"]
+  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
 }
 
 consul {
