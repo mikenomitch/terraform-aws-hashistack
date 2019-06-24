@@ -85,18 +85,15 @@ locals {
     "${path.module}/templates/vault.sh.tpl",
     {
       vault_version        = var.vault_version
-      vault_service_config = local.nomad_service_config
+      vault_service_config = local.vault_service_config
     }
   )
 
   launch_base_user_data = merge(local.base_config_values, {
     consul_template_config         = local.consul_template_config
     docker_config                  = local.docker_config
-    consul_service_config          = local.consul_service_config
     consul_template_service_config = local.consul_template_service_config
-    nomad_service_config           = local.nomad_service_config
     vault_config                   = local.vault_config
-    vault_service_config           = local.vault_service_config
   })
 }
 
