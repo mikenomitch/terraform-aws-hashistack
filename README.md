@@ -12,9 +12,9 @@ containerized applications to a personal Nomad cluster.
 
 ### TODOs
 
-- Add separate server and client nodes
-- Get Docker container running as example task
 - Nice outputs on terraform apply for quick access
+- Ensure nodes find eachother properly
+- Get Docker container running as example task
 - Write out How to Use Docs
   - Variables necessary
   - Commands for ssh-ing

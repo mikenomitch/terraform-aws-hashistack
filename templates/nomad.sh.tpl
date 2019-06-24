@@ -54,6 +54,7 @@ bind_addr = "0.0.0.0"
 
 client {
   enabled = true
+
   options = {
     "driver.raw_exec.enable" = "1"
   }

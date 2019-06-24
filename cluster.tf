@@ -5,6 +5,7 @@ locals {
     use_docker          = var.use_docker
     use_nomad           = var.use_nomad
     use_consul          = var.use_consul
+    use_vault           = var.use_vault
     use_consul_template = var.use_consul_template
     datacenter          = var.region
     region              = var.region
@@ -43,6 +44,11 @@ locals {
     {}
   )
 
+  vault_service_config = templatefile(
+    "${path.module}/templates/services/vault.service.tpl",
+    {}
+  )
+
   // serivce setup files
 
   docker_config = templatefile(
@@ -60,6 +66,11 @@ locals {
     merge(local.consul_base_config, {is_server = false})
   )
 
+  consul_template_config = templatefile(
+    "${path.module}/templates/consul_template.sh.tpl",
+    {consul_template_service_config = local.consul_template_service_config}
+  )
+
   nomad_server_config = templatefile(
     "${path.module}/templates/nomad.sh.tpl",
     merge(local.nomad_base_config, {is_server = true})
@@ -70,9 +81,12 @@ locals {
     merge(local.nomad_base_config, {is_server = false})
   )
 
-  consul_template_config = templatefile(
-    "${path.module}/templates/consul_template.sh.tpl",
-    {consul_template_service_config = local.consul_template_service_config}
+  vault_config = templatefile(
+    "${path.module}/templates/vault.sh.tpl",
+    {
+      vault_version        = var.vault_version
+      vault_service_config = local.nomad_service_config
+    }
   )
 
   launch_base_user_data = merge(local.base_config_values, {
@@ -81,6 +95,8 @@ locals {
     consul_service_config          = local.consul_service_config
     consul_template_service_config = local.consul_template_service_config
     nomad_service_config           = local.nomad_service_config
+    vault_config                   = local.vault_config
+    vault_service_config           = local.vault_service_config
   })
 }
 

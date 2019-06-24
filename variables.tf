@@ -12,24 +12,34 @@ variable "use_consul" {
 
 variable "use_consul_template" {
   type = bool
-  default = false
+  default = true
 }
 
 variable "use_nomad" {
   type = bool
-  default = false
+  default = true
+}
+
+variable "use_vault" {
+  type = bool
+  default = true
 }
 
 // == VERSIONS ==
+
+variable "consul_version" {
+  type = string
+  default = "1.5.1"
+}
 
 variable "nomad_version" {
   type = string
   default = "0.9.3"
 }
 
-variable "consul_version" {
+variable "vault_version" {
   type = string
-  default = "1.5.1"
+  default = "1.1.3"
 }
 
 // == HIGH LEVEL AWS INFO ==
@@ -101,7 +111,7 @@ variable "instance_type" {
 
 variable "desired_servers" {
   type = number
-  default = 1
+  default = 3
 }
 
 variable "max_servers" {

@@ -27,13 +27,6 @@ if [ ${use_consul} == true ] || [ ${use_consul} == 1 ]; then
   ${consul_config}
 fi
 
-if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
-  echo "============="
-  echo "=== Nomad ==="
-  echo "============="
-  ${nomad_config}
-fi
-
 if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
   echo "======================="
   echo "=== Consul Template ==="
@@ -41,6 +34,21 @@ if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
 
   ${consul_template_config}
 fi
+
+if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
+  echo "============="
+  echo "=== Nomad ==="
+  echo "============="
+  ${nomad_config}
+fi
+
+if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
+  echo "============="
+  echo "=== Vault ==="
+  echo "============="
+  ${vault_config}
+fi
+
 
 sudo systemctl daemon-reload
 
@@ -50,14 +58,20 @@ if [ ${use_consul} == true ] || [ ${use_consul} == 1 ]; then
   sudo systemctl start consul.service
 fi
 
+if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
+  echo "=== Starting Consul Template ==="
+  sudo systemctl enable consul-template.service
+  sudo systemctl start consul-template.service
+fi
+
 if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
 echo "=== Starting Nomad ==="
   sudo systemctl enable nomad.service
   sudo systemctl start nomad.service
 fi
 
-if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
-  echo "=== Starting Consul Template ==="
-  sudo systemctl enable consul-template.service
-  sudo systemctl start consul-template.service
+if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
+  echo "=== Starting Vault ==="
+  sudo systemctl enable vault.service
+  sudo systemctl start vault.service
 fi
