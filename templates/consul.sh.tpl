@@ -17,9 +17,6 @@ sudo mkdir -p /etc/consul.d
 if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   echo "=== Setting up Consul as Server ==="
 
-  # "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
-  # "bootstrap_expect": ${min_servers},
-
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
   "log_level": "INFO",
@@ -28,7 +25,9 @@ if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
-  "advertise_addr": "$PRIVATE_IP"
+  "advertise_addr": "$PRIVATE_IP",
+  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"],
+  "bootstrap_expect": ${min_servers}
 }
 EOF
 else
@@ -41,7 +40,9 @@ else
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
-  "advertise_addr": "$PRIVATE_IP"
+  "advertise_addr": "$PRIVATE_IP",
+  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"],
+  "bootstrap_expect": ${min_servers}
 }
 EOF
 fi
