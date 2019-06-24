@@ -17,24 +17,18 @@ sudo mkdir -p /etc/consul.d
 if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   echo "=== Setting up Consul as Server ==="
 
+  # "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
+  # "bootstrap_expect": ${min_servers},
+
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
-  "datacenter": "${datacenter}",
   "log_level": "INFO",
   "server": true,
   "ui": true,
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
-  "advertise_addr": "$PRIVATE_IP",
-  "bootstrap_expect": ${min_servers},
-  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
-  "service": {
-    "name": "consul"
-  },
-  "ports": {
-    "https": 8500
-  },
+  "advertise_addr": "$PRIVATE_IP"
 }
 EOF
 else
@@ -42,36 +36,16 @@ else
 
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
-  "datacenter": "${datacenter}",
   "log_level": "INFO",
   "ui": true,
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
-  "advertise_addr": "$PRIVATE_IP",
-  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"],
-  "ports": {
-    "https": 8500
-  },
+  "advertise_addr": "$PRIVATE_IP"
 }
 EOF
 fi
 
 sudo tee /etc/systemd/system/consul.service > /dev/null <<"EOF"
-[Unit]
-Description=Consul Agent
-Requires=network-online.target
-After=network-online.target
-
-[Service]
-Restart=on-failure
-Environment=CONSUL_ALLOW_PRIVILEGED_PORTS=true
-ExecStart=/usr/local/bin/consul agent -config-dir="/etc/consul.d"
-ExecReload=/bin/kill -HUP $MAINPID
-KillSignal=SIGTERM
-User=root
-Group=root
-
-[Install]
-WantedBy=multi-user.target
+${consul_service_config}
 EOF

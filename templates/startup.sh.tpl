@@ -1,43 +1,63 @@
 #!/bin/bash
-set -e
 
-PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+set -e
 
 echo "================================="
 echo "=== Setting up the HashiStack ==="
 echo "================================="
 
-echo "=============="
-echo "=== Docker ==="
-echo "=============="
+sudo apt-get -yqq update
+sudo apt-get -yqq install apt-transport-https ca-certificates curl gnupg-agent software-properties-common unzip
 
-${docker_config}
+PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 
-echo "=============="
-echo "=== Consul ==="
-echo "=============="
+if [ ${use_docker} == true ] || [ ${use_docker} == 1 ]; then
+  echo "=============="
+  echo "=== Docker ==="
+  echo "=============="
 
-${consul_config}
+  ${docker_config}
+fi
 
-echo "============="
-echo "=== Nomad ==="
-echo "============="
+if [ ${use_consul} == true ] || [ ${use_consul} == 1 ]; then
+  echo "=============="
+  echo "=== Consul ==="
+  echo "=============="
 
-${nomad_config}
+  ${consul_config}
+fi
 
-echo "======================="
-echo "=== Consul Template ==="
-echo "======================="
+if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
+  echo "============="
+  echo "=== Nomad ==="
+  echo "============="
+  ${nomad_config}
+fi
 
-${consul_template_config}
+if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
+  echo "======================="
+  echo "=== Consul Template ==="
+  echo "======================="
 
-echo "=== Starting Consul and Nomad ==="
+  ${consul_template_config}
+fi
 
 sudo systemctl daemon-reload
-sudo systemctl enable nomad.service
-sudo systemctl enable consul.service
-sudo systemctl enable consul-template.service
 
-sudo systemctl start nomad.service
-sudo systemctl start consul.service
-sudo systemctl start consul-template.service
+if [ ${use_consul} == true ] || [ ${use_consul} == 1 ]; then
+  echo "=== Starting Consul ==="
+  sudo systemctl enable consul.service
+  sudo systemctl start consul.service
+fi
+
+if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
+echo "=== Starting Nomad ==="
+  sudo systemctl enable nomad.service
+  sudo systemctl start nomad.service
+fi
+
+if [ ${use_consul_template} == true ] || [ ${use_consul_template} == 1 ]; then
+  echo "=== Starting Consul Template ==="
+  sudo systemctl enable consul-template.service
+  sudo systemctl start consul-template.service
+fi

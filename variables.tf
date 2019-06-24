@@ -1,3 +1,25 @@
+// == TOOLS ==
+
+variable "use_docker" {
+  type = bool
+  default = true
+}
+
+variable "use_consul" {
+  type = bool
+  default = true
+}
+
+variable "use_consul_template" {
+  type = bool
+  default = false
+}
+
+variable "use_nomad" {
+  type = bool
+  default = false
+}
+
 // == VERSIONS ==
 
 variable "nomad_version" {
@@ -7,7 +29,7 @@ variable "nomad_version" {
 
 variable "consul_version" {
   type = string
-  default = "1.4.4"
+  default = "1.5.1"
 }
 
 // == HIGH LEVEL AWS INFO ==
@@ -77,6 +99,11 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
+variable "desired_servers" {
+  type = number
+  default = 1
+}
+
 variable "max_servers" {
   type = number
   default = 3
@@ -84,7 +111,7 @@ variable "max_servers" {
 
 variable "min_servers" {
   type = number
-  default = 3
+  default = 1
 }
 
 variable "cluster_name" {

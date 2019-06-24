@@ -1,23 +1,54 @@
 locals {
-  consul_base_config = {
-    consul_version  = var.consul_version
-    datacenter      = var.region
-    min_servers     = var.min_servers
-    region          = var.region
-    retry_provider  = var.retry_join.provider
-    retry_tag_key   = var.retry_join.tag_key
-    retry_tag_value = var.retry_join.tag_value
+  // general config values
+
+  base_config_values = {
+    use_docker          = var.use_docker
+    use_nomad           = var.use_nomad
+    use_consul          = var.use_consul
+    use_consul_template = var.use_consul_template
+    datacenter          = var.region
+    region              = var.region
+    retry_provider      = var.retry_join.provider
+    retry_tag_key       = var.retry_join.tag_key
+    retry_tag_value     = var.retry_join.tag_value
   }
 
-  nomad_base_config = {
-    datacenter      = var.region
-    min_servers     = var.min_servers
-    nomad_version   = var.nomad_version
-    region          = var.region
-    retry_provider  = var.retry_join.provider
-    retry_tag_key   = var.retry_join.tag_key
-    retry_tag_value = var.retry_join.tag_value
-  }
+  consul_base_config = merge(local.base_config_values, {
+    min_servers                    = var.min_servers
+    consul_version                 = var.consul_version
+    consul_template_service_config = local.consul_template_service_config
+    consul_service_config          = local.consul_service_config
+  })
+
+  nomad_base_config = merge(local.base_config_values, {
+    min_servers          = var.min_servers
+    nomad_version        = var.nomad_version
+    nomad_service_config = local.nomad_service_config
+  })
+
+  // serivce config files
+
+  consul_service_config = templatefile(
+    "${path.module}/templates/services/consul.service.tpl",
+    {}
+  )
+
+  nomad_service_config = templatefile(
+    "${path.module}/templates/services/nomad.service.tpl",
+    {}
+  )
+
+  consul_template_service_config = templatefile(
+    "${path.module}/templates/services/consul_template.service.tpl",
+    {}
+  )
+
+  // serivce setup files
+
+  docker_config = templatefile(
+    "${path.module}/templates/docker.sh.tpl",
+    {}
+  )
 
   consul_server_config = templatefile(
     "${path.module}/templates/consul.sh.tpl",
@@ -39,13 +70,18 @@ locals {
     merge(local.nomad_base_config, {is_server = false})
   )
 
-  docker_config = templatefile("${path.module}/templates/docker.sh.tpl", {})
-  consul_template_config = templatefile("${path.module}/templates/consul_template.sh.tpl", {})
+  consul_template_config = templatefile(
+    "${path.module}/templates/consul_template.sh.tpl",
+    {consul_template_service_config = local.consul_template_service_config}
+  )
 
-  launch_base_user_data = {
-    consul_template_config = local.consul_template_config
-    docker_config          = local.docker_config
-  }
+  launch_base_user_data = merge(local.base_config_values, {
+    consul_template_config         = local.consul_template_config
+    docker_config                  = local.docker_config
+    consul_service_config          = local.consul_service_config
+    consul_template_service_config = local.consul_template_service_config
+    nomad_service_config           = local.nomad_service_config
+  })
 }
 
 resource "aws_launch_configuration" "hashistack_server_launch" {
@@ -86,7 +122,7 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
 
 resource "aws_autoscaling_group" "hashistack_server_asg" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 3
+  desired_capacity   = var.desired_servers
   max_size           = var.max_servers
   min_size           = var.min_servers
 
@@ -108,7 +144,7 @@ resource "aws_autoscaling_group" "hashistack_server_asg" {
 
 resource "aws_autoscaling_group" "hashistack_client_asg" {
   availability_zones = ["us-east-1a"]
-  desired_capacity   = 3
+  desired_capacity   = var.desired_servers
   max_size           = var.max_servers
   min_size           = var.min_servers
 
