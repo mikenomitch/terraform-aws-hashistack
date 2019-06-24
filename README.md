@@ -12,8 +12,8 @@ containerized applications to a personal Nomad cluster.
 
 ### TODOs
 
-- Nice outputs on terraform apply for quick access
 - Ensure nodes find eachother properly
+- Nice outputs on terraform apply for quick access
 - Get Docker container running as example task
 - Write out How to Use Docs
   - Variables necessary
@@ -21,7 +21,6 @@ containerized applications to a personal Nomad cluster.
   - Commands for accessing
   - Commands for running nomad
   - Use TF output if possible
-- Add Vault
 - Configuration Audit (every option on each service)
 
 ### Deps

@@ -42,13 +42,14 @@ if [ ${use_nomad} == true ] || [ ${use_nomad} == 1 ]; then
   ${nomad_config}
 fi
 
-if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
-  echo "============="
-  echo "=== Vault ==="
-  echo "============="
-  ${vault_config}
+if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
+  if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
+    echo "============="
+    echo "=== Vault ==="
+    echo "============="
+    ${vault_config}
+  fi
 fi
-
 
 sudo systemctl daemon-reload
 
@@ -70,8 +71,10 @@ echo "=== Starting Nomad ==="
   sudo systemctl start nomad.service
 fi
 
-if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
-  echo "=== Starting Vault ==="
-  sudo systemctl enable vault.service
-  sudo systemctl start vault.service
+if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
+  if [ ${use_vault} == true ] || [ ${use_vault} == 1 ]; then
+    echo "=== Starting Vault ==="
+    sudo systemctl enable vault.service
+    sudo systemctl start vault.service
+  fi
 fi

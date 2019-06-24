@@ -5,8 +5,8 @@ locals {
     use_docker          = var.use_docker
     use_nomad           = var.use_nomad
     use_consul          = var.use_consul
-    use_vault           = var.use_vault
     use_consul_template = var.use_consul_template
+    use_vault           = var.use_vault
     datacenter          = var.region
     region              = var.region
     retry_provider      = var.retry_join.provider
@@ -114,6 +114,7 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
     merge(local.launch_base_user_data, {
       consul_config = local.consul_server_config
       nomad_config  = local.nomad_server_config
+      is_server     = true
     })
   )
 }
@@ -132,6 +133,7 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
     merge(local.launch_base_user_data, {
       consul_config = local.consul_client_config
       nomad_config  = local.nomad_client_config
+      is_server     = false
     })
   )
 }

@@ -15,6 +15,8 @@ sudo mkdir -p /mnt/vault
 sudo mkdir -p /etc/vault.d
 
 sudo tee /etc/vault.d/vault.hcl > /dev/null <<EOF
+ui = true
+
 backend "consul" {
   path = "vault/"
   address = "$PRIVATE_IP:8500"
@@ -29,6 +31,6 @@ listener "tcp" {
 }
 EOF
 
-sudo tee /etc/systemd/system/vault.vault > /dev/null <<"EOF"
+sudo tee /etc/systemd/system/vault.service > /dev/null <<"EOF"
 ${vault_service_config}
 EOF
