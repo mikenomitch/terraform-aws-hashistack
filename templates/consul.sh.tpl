@@ -19,8 +19,8 @@ if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
 
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
-  "log_level": "INFO",
   "server": true,
+  "log_level": "INFO",
   "ui": true,
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
@@ -35,6 +35,7 @@ else
 
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
+  "server": false,
   "log_level": "INFO",
   "ui": true,
   "data_dir": "/mnt/consul",

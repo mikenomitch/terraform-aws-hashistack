@@ -4,15 +4,28 @@
 
 This is a terraform module for setting up a Hashistack on AWS.
 
-The HashiStack consists of Terraform, Consul, Vault, and Nomad.
+The HashiStack consists of Consul, Vault, and Nomad on infrastructure
+launched by Terraform.
 
-After a short initial settup (providing keys and small config), and
-a `terraform apply` the a user should be able to quickly deploy
-containerized applications to a personal Nomad cluster.
+After a short initial settup a user is able to deploy
+containerized applications to a Nomad cluster.
+
+### Usage
+
+- Get credentials for an AWS account.
+- `export AWS_ACCESS_KEY_ID=${YOUR_ACCESS_KEY}`
+- `export AWS_SECRET_ACCESS_KEY=${YOUR_SECRET_KEY}`
+- `terraform apply` (this will take several minutes)
+- Access your Hashistack via EC2.
+
+### Deps
+
+Requires Terraform 12, an AWS account.
 
 ### TODOs
 
-- Ensure nodes find eachother properly
+- Ensure nomad nodes find eachother properly
+- Make sure consul and nomad clients load properly
 - Nice outputs on terraform apply for quick access
 - Get Docker container running as example task
 - Write out How to Use Docs
@@ -23,11 +36,7 @@ containerized applications to a personal Nomad cluster.
   - Use TF output if possible
 - Configuration Audit (every option on each service)
 
-### Deps
-
-Requires terraform 12.
-
-### Inspirations
+### ~~Plagiarized from~~ Inspired By
 
 - https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
 - https://github.com/hashicorp/nomad/tree/master/terraform
