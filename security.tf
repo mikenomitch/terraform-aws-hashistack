@@ -84,3 +84,52 @@ resource "aws_security_group" "lc_security_group" {
   // if this is empty, does it set it up on the parent vpc
   vpc_id      = "${var.vpc_id}"
 }
+
+// =================
+// == PERMISSIONS ==
+// =================
+
+// Allow consul & nomad auto-join
+
+data "aws_iam_policy_document" "describe-instances" {
+  statement {
+    effect  = "Allow"
+    actions = ["ec2:DescribeInstances"]
+    resources = ["*"]
+  }
+}
+
+data "aws_iam_policy_document" "assume-role" {
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "auto-join" {
+  name        = "auto-join"
+  description = "Allows Consul nodes to describe instances for joining."
+  policy      =  "${data.aws_iam_policy_document.describe-instances.json}"
+}
+
+resource "aws_iam_role" "auto-join" {
+  name = "auto-join"
+  assume_role_policy = "${data.aws_iam_policy_document.assume-role.json}"
+}
+
+resource "aws_iam_policy_attachment" "auto-join" {
+  name       = "auto-join"
+  roles      = ["${aws_iam_role.auto-join.name}"]
+  policy_arn = "${aws_iam_policy.auto-join.arn}"
+}
+
+resource "aws_iam_instance_profile" "auto-join" {
+  name = "auto-join"
+  role = "${aws_iam_role.auto-join.name}"
+}

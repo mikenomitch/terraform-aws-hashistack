@@ -31,3 +31,4 @@ Requires terraform 12.
 
 - https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
 - https://github.com/hashicorp/nomad/tree/master/terraform
+- https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/hashistack

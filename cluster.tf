@@ -106,6 +106,8 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
   security_groups             = [aws_security_group.lc_security_group.id]
   associate_public_ip_address = var.associate_public_ip_address
 
+  iam_instance_profile = "${aws_iam_instance_profile.auto-join.name}"
+
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
     merge(local.launch_base_user_data, {
@@ -124,6 +126,8 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
 
   security_groups             = [aws_security_group.lc_security_group.id]
   associate_public_ip_address = var.associate_public_ip_address
+
+  iam_instance_profile = "${aws_iam_instance_profile.auto-join.name}"
 
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
