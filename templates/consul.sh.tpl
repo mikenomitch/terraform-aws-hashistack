@@ -26,8 +26,8 @@ if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
   "advertise_addr": "$PRIVATE_IP",
-  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} addr_type=public_v4"],
-  "bootstrap_expect": ${min_servers}
+  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"],
+  "bootstrap_expect": ${desired_servers}
 }
 EOF
 else
@@ -36,14 +36,13 @@ else
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
   "server": false,
-  "log_level": "INFO",
+  "log_level": "DEBUG",
   "ui": true,
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
   "advertise_addr": "$PRIVATE_IP",
-  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} addr_type=public_v4"],
-  "bootstrap_expect": ${min_servers}
+  "retry_join": ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value}"]
 }
 EOF
 fi

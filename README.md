@@ -24,7 +24,6 @@ Requires Terraform 12, an AWS account.
 
 ### TODOs
 
-- Ensure nomad nodes find eachother properly
 - Make sure consul and nomad clients load properly
 - Nice outputs on terraform apply for quick access
 - Get Docker container running as example task
@@ -34,7 +33,8 @@ Requires Terraform 12, an AWS account.
   - Commands for accessing
   - Commands for running nomad
   - Use TF output if possible
-- Configuration Audit (every option on each service)
+- Ensure vault and nomad integration works properly
+- Config Audit
 
 ### ~~Plagiarized from~~ Inspired By
 

@@ -24,22 +24,7 @@ bind_addr = "0.0.0.0"
 
 server {
   enabled = true,
-  bootstrap_expect = ${min_servers}
-}
-
-server_join {
-  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} addr_type=public_v4"]
-}
-
-consul {
-  address = "$PRIVATE_IP:8500"
-  auto_advertise = true
-
-  server_service_name = "nomad"
-  server_auto_join    = true
-
-  client_service_name = "nomad-client"
-  client_auto_join    = true
+  bootstrap_expect = ${desired_servers}
 }
 EOF
 else
@@ -57,22 +42,8 @@ client {
 
   options = {
     "driver.raw_exec.enable" = "1"
+    "docker.privileged.enabled" = "true"
   }
-}
-
-server_join {
-  retry_join = ["provider=${retry_provider} tag_key=${retry_tag_key} tag_value=${retry_tag_value} addr_type=public_v4"]
-}
-
-consul {
-  address = "$PRIVATE_IP:8500"
-  auto_advertise = true
-
-  server_service_name = "nomad"
-  server_auto_join    = true
-
-  client_service_name = "nomad-client"
-  client_auto_join    = true
 }
 EOF
 fi

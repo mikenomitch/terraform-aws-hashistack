@@ -15,14 +15,14 @@ locals {
   }
 
   consul_base_config = merge(local.base_config_values, {
-    min_servers                    = var.min_servers
+    desired_servers                = var.desired_servers
     consul_version                 = var.consul_version
     consul_template_service_config = local.consul_template_service_config
     consul_service_config          = local.consul_service_config
   })
 
   nomad_base_config = merge(local.base_config_values, {
-    min_servers          = var.min_servers
+    desired_servers      = var.desired_servers
     nomad_version        = var.nomad_version
     nomad_service_config = local.nomad_service_config
   })
