@@ -36,7 +36,7 @@ else
   sudo tee /etc/consul.d/config.json > /dev/null <<EOF
 {
   "server": false,
-  "log_level": "DEBUG",
+  "log_level": "INFO",
   "ui": true,
   "data_dir": "/mnt/consul",
   "bind_addr": "0.0.0.0",

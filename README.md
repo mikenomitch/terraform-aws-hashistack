@@ -1,7 +1,5 @@
 # Terraform AWS Hashistack
 
-### This is a Work In Progress
-
 This is a terraform module for setting up a Hashistack on AWS.
 
 The HashiStack consists of Consul, Vault, and Nomad on infrastructure
@@ -20,13 +18,12 @@ containerized applications to a Nomad cluster.
 
 ### Deps
 
-Requires Terraform 12, an AWS account.
+- Terraform 12+
+- AWS Account Key and Secret
 
 ### TODOs
 
-- Make sure consul and nomad clients load properly
 - Nice outputs on terraform apply for quick access
-- Get Docker container running as example task
 - Write out How to Use Docs
   - Variables necessary
   - Commands for ssh-ing
