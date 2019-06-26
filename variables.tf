@@ -90,7 +90,6 @@ variable "whitelist_ip" {
   default = "0.0.0.0/0"
 }
 
-
 // == ALB ==
 
 variable "base_ami" {
