@@ -80,7 +80,7 @@ variable "http_port_from" {
 
 variable "http_port_to" {
   type = string
-  default = "9999"
+  default = "65535"
 }
 
 // CIDR
