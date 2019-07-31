@@ -135,16 +135,6 @@ variable "associate_public_ip_address" {
 
 // == SERVER DATA ==
 
-variable "to_touch" {
-  type = string
-  default = "foo"
-}
-
-variable "to_echo" {
-  type = string
-  default = "bar"
-}
-
 variable "retry_join" {
   type = "map"
 

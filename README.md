@@ -15,16 +15,15 @@ containerized applications to a Nomad cluster.
 - `export AWS_SECRET_ACCESS_KEY=${YOUR_SECRET_KEY}`
 - `terraform apply` (this will take several minutes)
 - Access your Hashistack via EC2.
+- If running in production, ensure that security groups are restricted beyond the default setup.
 
 ### Dependencies
 
 - Terraform 12+
 - AWS Account Key and Secret
 
-### TODOs
+### Remaining Todos
 
-- Nice outputs on terraform apply for quick access
-- Restrict security groups
 - Write out How to Use Docs
   - Variables necessary
   - Commands for ssh-ing
@@ -36,6 +35,6 @@ containerized applications to a Nomad cluster.
 
 ### ~~Plagiarized from~~ Inspired By
 
-- https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
 - https://github.com/hashicorp/nomad/tree/master/terraform
+- https://github.com/nicholasjackson/terraform-aws-hashicorp-suite
 - https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/hashistack
