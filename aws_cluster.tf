@@ -106,7 +106,7 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
   security_groups             = [aws_security_group.lc_security_group.id]
   associate_public_ip_address = var.associate_public_ip_address
 
-  iam_instance_profile = "${aws_iam_instance_profile.auto-join.name}"
+  iam_instance_profile = aws_iam_instance_profile.auto-join.name
 
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
@@ -127,7 +127,7 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
   security_groups             = [aws_security_group.lc_security_group.id]
   associate_public_ip_address = var.associate_public_ip_address
 
-  iam_instance_profile = "${aws_iam_instance_profile.auto-join.name}"
+  iam_instance_profile = aws_iam_instance_profile.auto-join.name
 
   user_data = templatefile(
     "${path.module}/templates/startup.sh.tpl",
@@ -158,7 +158,7 @@ resource "aws_autoscaling_group" "hashistack_server_asg" {
     }
   ]
 
-  launch_configuration = "${aws_launch_configuration.hashistack_server_launch.name}"
+  launch_configuration = aws_launch_configuration.hashistack_server_launch.name
 }
 
 resource "aws_autoscaling_group" "hashistack_client_asg" {
@@ -180,5 +180,5 @@ resource "aws_autoscaling_group" "hashistack_client_asg" {
     }
   ]
 
-  launch_configuration = "${aws_launch_configuration.hashistack_client_launch.name}"
+  launch_configuration = aws_launch_configuration.hashistack_client_launch.name
 }

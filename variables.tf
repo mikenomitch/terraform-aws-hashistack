@@ -94,8 +94,8 @@ variable "whitelist_ip" {
 
 variable "base_ami" {
   type = string
-  default = "ami-024a64a6685d05041"
-  description = "The id of the machine image (AMI) to use for the server. Uses the US East-1 AMI for Ubuntu 18.0.4 LTS AMD 64"
+  default = "ami-0745d55d209ff6afd"
+  description = "The id of the machine image (AMI) to use for the server. Uses the US East-1 AMI for Ubuntu 20.04 LTS AMD 64"
 }
 
 variable "key_name" {
@@ -136,7 +136,7 @@ variable "associate_public_ip_address" {
 // == SERVER DATA ==
 
 variable "retry_join" {
-  type = "map"
+  type = map
 
   default = {
     provider  = "aws"
