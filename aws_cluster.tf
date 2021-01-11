@@ -98,7 +98,7 @@ locals {
 }
 
 resource "aws_launch_configuration" "hashistack_server_launch" {
-  name   = "hashistack-server"
+  name_prefix = "hashistack-server"
   image_id      = var.base_ami
   instance_type = var.instance_type
   key_name      = var.key_name
@@ -116,10 +116,14 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
       is_server     = true
     })
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_launch_configuration" "hashistack_client_launch" {
-  name   = "hashistack-client"
+  name_prefix = "hashistack-client"
   image_id      = var.base_ami
   instance_type = var.instance_type
   key_name      = var.key_name
@@ -137,6 +141,10 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
       is_server     = false
     })
   )
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "hashistack_server_asg" {

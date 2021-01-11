@@ -29,17 +29,17 @@ variable "use_vault" {
 
 variable "consul_version" {
   type = string
-  default = "1.9.1+ent"
+  default = "1.9.1"
 }
 
 variable "nomad_version" {
   type = string
-  default = "1.0.1+ent"
+  default = "1.0.1"
 }
 
 variable "vault_version" {
   type = string
-  default = "1.6.1+ent"
+  default = "1.6.1"
 }
 
 // == HIGH LEVEL AWS INFO ==
@@ -110,7 +110,7 @@ variable "instance_type" {
 
 variable "desired_servers" {
   type = number
-  default = 3
+  default = 2
 }
 
 variable "max_servers" {
