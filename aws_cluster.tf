@@ -9,9 +9,12 @@ locals {
     use_vault           = var.use_vault
     datacenter          = var.region
     region              = var.region
+    authoritative_region = var.authoritative_region
+    replication_token = var.replication_token
     retry_provider      = var.retry_join.provider
     retry_tag_key       = var.retry_join.tag_key
     retry_tag_value     = var.retry_join.tag_value
+    rpc_port            = var.rpc_port
   }
 
   consul_base_config = merge(local.base_config_values, {
@@ -99,7 +102,7 @@ locals {
 
 resource "aws_launch_configuration" "hashistack_server_launch" {
   name_prefix = "hashistack-server"
-  image_id      = var.base_ami
+  image_id      = var.base_amis[var.region]
   instance_type = var.instance_type
   key_name      = var.key_name
 
@@ -124,7 +127,7 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
 
 resource "aws_launch_configuration" "hashistack_client_launch" {
   name_prefix = "hashistack-client"
-  image_id      = var.base_ami
+  image_id      = var.base_amis[var.region]
   instance_type = var.instance_type
   key_name      = var.key_name
 
@@ -148,7 +151,7 @@ resource "aws_launch_configuration" "hashistack_client_launch" {
 }
 
 resource "aws_autoscaling_group" "hashistack_server_asg" {
-  availability_zones = ["us-east-1a"]
+  availability_zones = var.availability_zones[var.region]
   desired_capacity   = var.desired_servers
   max_size           = var.max_servers
   min_size           = var.min_servers
@@ -170,8 +173,8 @@ resource "aws_autoscaling_group" "hashistack_server_asg" {
 }
 
 resource "aws_autoscaling_group" "hashistack_client_asg" {
-  availability_zones = ["us-east-1a"]
-  desired_capacity   = var.desired_servers
+  availability_zones = var.availability_zones[var.region]
+  desired_capacity   = var.desired_clients
   max_size           = var.max_servers
   min_size           = var.min_servers
 

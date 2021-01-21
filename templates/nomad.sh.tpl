@@ -1,4 +1,5 @@
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+PUBLIC_IP=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
 
 echo "=== Fetching Nomad ==="
 cd /tmp
@@ -25,7 +26,20 @@ bind_addr = "0.0.0.0"
 server {
   enabled = true,
   bootstrap_expect = ${desired_servers}
+  authoritative_region = "${authoritative_region}"
 }
+
+acl {
+  enabled = true
+  replication_token = "${replication_token}"
+}
+
+advertise {
+  http = "$PUBLIC_IP"
+  rpc  = "$PUBLIC_IP"
+  serf = "$PUBLIC_IP"
+}
+
 EOF
 else
   echo "=== Setting up Nomad as Client ==="
@@ -44,6 +58,10 @@ client {
     "driver.raw_exec.enable" = "1"
     "docker.privileged.enabled" = "true"
   }
+}
+
+acl {
+  enabled = true
 }
 EOF
 fi
