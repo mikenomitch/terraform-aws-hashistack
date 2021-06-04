@@ -16,6 +16,13 @@ sudo mkdir -p /etc/nomad.d
 if [ ${is_server} == true ] || [ ${is_server} == 1 ]; then
   echo "=== Setting up Nomad as Server ==="
 
+  echo "=== Fetching ent trial license ==="
+
+  curl https://mikenomitch-public.s3.amazonaws.com/nomad-license.hclic --output ~/nomad-license.hclic
+  export NOMAD_LICENSE_PATH=~/nomad-license.hclic
+
+  echo "=== Writing Server Config ==="
+
   sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
 datacenter = "${datacenter}"
 region     = "${region}"
@@ -27,6 +34,16 @@ server {
   enabled = true,
   bootstrap_expect = ${desired_servers}
   authoritative_region = "${authoritative_region}"
+
+  default_scheduler_config {
+    memory_oversubscription_enabled = true
+
+    preemption_config {
+      batch_scheduler_enabled   = true
+      system_scheduler_enabled  = true
+      service_scheduler_enabled = true
+    }
+  }
 }
 
 acl {
@@ -40,9 +57,27 @@ advertise {
   serf = "$PUBLIC_IP"
 }
 
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  prometheus_metrics         = true
+}
+
 EOF
 else
   echo "=== Setting up Nomad as Client ==="
+
+  echo "=== Downloading ECS Driver ==="
+
+  mkdir /mnt/nomad/plugins
+  curl https://mikenomitch-public.s3.amazonaws.com/nomad-driver-ecs --output /mnt/nomad/plugins/nomad-driver-ecs
+  sudo chmod +x /mnt/nomad/plugins/nomad-driver-ecs
+
+  echo "=== Making volume dir (in an unsafe way for now) ==="
+  sudo mkdir -p /var/lib/grafana
+  sudo chmod -R a+rwX /var/lib/grafana
+
+  echo "=== Writing Client Config ==="
 
   sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
 datacenter = "${datacenter}"
@@ -57,13 +92,45 @@ client {
   options = {
     "driver.raw_exec.enable" = "1"
     "docker.privileged.enabled" = "true"
+    "docker.volumes.enabled" = "true"
+  }
+
+  host_volume "grafana" {
+    path = "/var/lib/grafana"
+    read_only = false
   }
 }
 
 acl {
   enabled = true
 }
+
+plugin "nomad-driver-ecs" {
+  config {
+    enabled = true
+    cluster = "nomad-remote-driver-cluster"
+    region  = "us-east-1"
+  }
+}
+
+plugin "docker" {
+  config {
+    allow_privileged = true
+
+    volumes {
+      enabled = true
+    }
+  }
+}
+
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  prometheus_metrics         = true
+}
+
 EOF
+
 fi
 
 sudo tee /etc/systemd/system/nomad.service > /dev/null <<"EOF"

@@ -7,7 +7,7 @@ echo "=== Setting up the HashiStack ==="
 echo "================================="
 
 sudo apt-get -yqq update
-sudo apt-get -yqq install apt-transport-https ca-certificates curl gnupg-agent software-properties-common unzip
+sudo apt-get -yqq install apt-transport-https ca-certificates curl gnupg-agent software-properties-common unzip jq
 
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 

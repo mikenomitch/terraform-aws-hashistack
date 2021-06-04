@@ -103,7 +103,7 @@ locals {
 resource "aws_launch_configuration" "hashistack_server_launch" {
   name_prefix = "hashistack-server"
   image_id      = var.base_amis[var.region]
-  instance_type = var.instance_type
+  instance_type = var.server_instance_type
   key_name      = var.key_name
 
   security_groups             = [aws_security_group.lc_security_group.id]
@@ -128,7 +128,7 @@ resource "aws_launch_configuration" "hashistack_server_launch" {
 resource "aws_launch_configuration" "hashistack_client_launch" {
   name_prefix = "hashistack-client"
   image_id      = var.base_amis[var.region]
-  instance_type = var.instance_type
+  instance_type = var.client_instance_type
   key_name      = var.key_name
 
   security_groups             = [aws_security_group.lc_security_group.id]
